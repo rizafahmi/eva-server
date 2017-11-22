@@ -1,8 +1,31 @@
-const exec = require('child_process').exec
+const app = require('fastify')()
+const execJS = require('./lib/exec')
 
-const cmdWars = `docker run --rm codewars/node-runner run -l javascript -c "console.log('a b c'.split(' '))"`
+app.get('/', (req, res) => {
+  res.send({
+    status: 'OK'
+  })
+})
 
-exec(cmdWars, (err, stdout, stderr) => {
+app.post('/eva', async (req, res) => {
+  const { code } = req.body
+
+  const cmdWars = `docker run --rm codewars/node-runner run -l javascript -c "${code}"`
+  try {
+    const results = await execJS(cmdWars)
+    res.send({
+      status: 'OK',
+      result: results
+    })
+  } catch (err) {
+    res.send({
+      status: 'KO',
+      result: err
+    })
+  }
+})
+
+app.listen(6543, err => {
   if (err) throw err
-  console.log(stdout)
+  console.log(`Server running at http://localhost:6543/`)
 })
