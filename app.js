@@ -1,6 +1,8 @@
 const app = require('fastify')()
 const execJS = require('./lib/exec')
 
+app.use(require('cors')())
+
 app.get('/', (req, res) => {
   res.send({
     status: 'OK'
