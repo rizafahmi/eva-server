@@ -10,9 +10,9 @@ app.get('/', (req, res) => {
 })
 
 app.post('/eva', async (req, res) => {
-  const { code } = req.body
-
-  const cmdWars = `docker run --rm codewars/node-runner run -l javascript -c "${code}"`
+  const { code, testCode } = req.body
+  console.log(`GETCODE: ${code}`)
+  const cmdWars = `docker run --rm codewars/node-runner run -l javascript -c "${code}" -t cw -f "${testCode}"`
   try {
     const results = await execJS(cmdWars)
     res.send({
